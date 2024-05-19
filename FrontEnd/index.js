@@ -1,8 +1,6 @@
-/*faire attention a appeler a chaque fois les functions 
- ça peut intrener des problemes d'affichage */
+/////////////////////////////BUTTON DES CATEGORIES///////////////////
 
-
-/*function pour DEMANDER AU API LES BUTTON DES CATEGORIES */
+/*function pour DEMANDER AU API LES BUTTON DES CATEGORIES Swagger*/
 async function getCategorys() {
     try {
         // on recupere les donnes
@@ -42,9 +40,43 @@ async function addCategorysButtons() {
 }
 addCategorysButtons()
 
-//////////////////////////////////////////////////////////////////////
+////FILTRER LES CATEGORIES AU CLICK(pour utilizer la logique on peut utilizER le code depuis l'api)////
+async function selectCategory() {
+    //ON APPEL LA RECUPERATION DES IMAGES DE LA GALLLERY pour fiaire la gestion de tris
+    //absolument a voir a avce la documentation Swagger
+    const category = await getWorks()
+    //console.log(category)
+    const btnCategory = document.querySelectorAll(".tri li")
+    for(let i = 0; i < btnCategory.length; i++) {
+        btnCategory[i].addEventListener("click", (e) => {
+            //on va creer une variable pôur estoquer le resulta de levenement(e)
+            //pour l'utilizer pour le tri des images
+            const btnCategoryId = e.target.id
+            console.log(e.target.id)
+            //console.log(btnCategoryId)
+            //pour chaque click on elimine les images works
+            gallery.innerHTML = ""
+            // On va creer la condition pour filtrer
+                if (btnCategoryId !== "0") {
+                    const filterCategory = category.filter((works) => {
+                    return works.categoryId == btnCategoryId
+                    })
+                    filterCategory.forEach((works) => {
+                        //ON APPEL LA FUNCTION QU'ON A CREER AVANT
+                        addWorks(works)
+                    })
+                    } else {
+                        //ON APPEL LA FUNCTION  QU'ON A CREER AVANT
+                        createWorks() 
+                    }
+        })
+    }
+}
+selectCategory()
 
-//FUNCTION POUR RECUPERER le tableau de la galley sur swagger
+/////////////////////////////GALLERY PRINCIPALE/////////////////////////////////////////
+
+//FUNCTION POUR RECUPERER le tableau de la gallerie sur swagger
 async function getWorks() {
     try {
         const responseGallery = await fetch("http://localhost:5678/api/works")
@@ -61,7 +93,7 @@ async function getWorks() {
 }
 //getWorks()
 
-//  
+//CREATION DES ELEMENT POUR HAQUE IMAGE
 async function createWorks() {
     const works = await getWorks()
     works.forEach((work) => {
@@ -90,43 +122,7 @@ const gallery = document.querySelector(".gallery")
 }
 //addWorks()
 
-////////////////////////////////////////////////////////////////////////
-
-////FILTRER LES CATEGORIES AU CLICK(pour utilizer la logique on peut utilizER le code depuis l'api)////
-async function selectCategory() {
-    const category = await getWorks()
-    //console.log(category)
-    const btnCategory = document.querySelectorAll(".tri li")
-    for(let i = 0; i < btnCategory.length; i++) {
-        btnCategory[i].addEventListener("click", (e) => {
-            //on va creer une variable pôur estoquer le resulta de levenement(e)
-            //pour l'utilizer pour le tri des images
-            const btnCategoryId = e.target.id
-            console.log(e.target.id)
-            //console.log(btnCategoryId)
-            
-            //pour chaque click on elimine les images works
-            gallery.innerHTML = ""
-            // On va creer la condition pour filtrer
-                if (btnCategoryId !== "0") {
-
-                    const filterCategory = category.filter((works) => {
-                    return works.categoryId == btnCategoryId
-                    })
-                    filterCategory.forEach((works) => {
-                        //ON APPEL LA FUNCTION QU'ON A CREER AVANT
-                        addWorks(works)
-                    })
-                    } else {
-                        //ON APPEL LA FUNCTION  QU'ON A CREER AVANT
-                        createWorks() 
-                    }
-        })
-    }
-}
-selectCategory()
-
-////////////////////////////////////////////////////////////////////////
+///////////COMUNICATION AVEC LE POST DE LA REQUET POUR CONNECTION LOG IN//////////////////////////////////////////
 
 // Function qui va a COMUNIQUER AVEC le fichier login.js
 //et va a ajouter la class  display block pour faire aparaitre le MOD EDITION
@@ -146,7 +142,7 @@ window.addEventListener('load', () => {
             element.classList.add("block")
         })
         logout.addEventListener("click", () => {
-            //cette code pour faire l   a conneccion avec mon autre fichie.js
+            //cette code pour faire la conneccion avec mon autre fichie.js
             sessionStorage.setItem('loggedIn', false)
 
             //redireccion a la page de login
@@ -284,11 +280,7 @@ formModalContainerAdd.addEventListener("submit", (e) => {
     });
 });
 
-
-
-
-
-
+///////////////////////////////MODALE GALLERY//////////////////////////////////////////
 
 //function pour CREER LA GALLERIE ET L'AJOUTER dans la gallery popup
 const galleryPopup = document.querySelector(".popup__gallery")
