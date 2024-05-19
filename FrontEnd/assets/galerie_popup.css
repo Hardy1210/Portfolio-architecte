@@ -1,0 +1,164 @@
+/*POPUP que va s'afficher 
+au moment de login*/
+
+/*popup qui prend en compte le style de eface et ajouter des images*/
+#popup {
+    /*display: none;*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fond semi-transparent */
+    z-index: 9999; /* Pour s'assurer que la fenêtre contextuelle est au-dessus de tout le reste */
+	/*on modifi le styale avec js*/
+	display: none;
+}
+
+/* on le garde si on veut utiliser la propietee toggle en javascript
+.popup-hidden {
+	display: none;
+}
+*/
+.popup__container {
+	/*ACIVAR ESTO DESPUES DE FINALIZADO EL PROYECto !!!!!!!!!!*/
+	position: absolute;
+	
+	
+	/*max-width: 100%;  Ajustez la largeur maximale selon vos besoins */
+	/*max-height: 100%;  Ajustez la hauteur maximale selon vos besoins */
+	/* overflow: auto; Permet le défilement si le contenu dépasse la taille du popup */
+	background-color: #FFFFFF;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	width: 610px;
+	/*on modifi le styale avec js
+	display: none;*/
+}
+
+.close {
+	position: absolute;
+	
+	top: 30px;
+	right: 35px;
+}
+
+.close .fa-xmark {
+	font-size: 1.45em;
+	color: inherit;
+}
+
+.popup__container--edition {
+	display: flex;
+	flex-direction: column;
+	padding: 0 85px;
+	align-items: center;
+	margin-top: 50px;
+}
+
+.popup__container--edition h3 {
+	font-size: 1.8em;
+	margin-top: 20px;
+
+}
+
+.popup__gallery {
+    width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 9px;
+	grid-row-gap: 40px;
+	margin-top: 40px;
+
+}
+
+.popup__gallery {
+    width: 100%;
+}
+
+.popup__gallery figure {
+	position: relative;
+}
+
+.popup__gallery button i {
+	font-size: 0.76em;
+    color: white;
+}
+
+.popup__gallery button {
+	cursor: pointer;
+	border: none;
+
+}
+.popup__gallery .trash {
+	position: absolute;
+	left: 57px;
+	top: 5px;
+	background-color: black;
+	border-radius: 3px;
+	width: 18px;
+	height: 18px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+.popup__gallery figure img {
+	width: 100%;
+    height: 100%;
+}
+
+.btn__container {
+	display: flex;
+	border-top: 2px solid #B3B3B3;
+	width: 95%;
+	margin-top: 50px;
+}
+
+.btn__container button {
+	position: relative;
+	padding: 9px;
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2.7em auto ;
+	width: 230px;
+	text-align: center;
+	border-radius: 60px ;
+	cursor: pointer;
+}
+
+.btn__container button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; /* Occupe toute la hauteur du bouton */
+    background-color: rgba(255, 255, 255, 0); /* Couleur de fond de l'élément pseudo-élément */
+    transition: background-color 0.3s ease; /* Transition de la couleur de fond */
+}
+
+.btn__container button:hover::before {
+    background-color: rgba(255, 255, 255, 0.146); /* Nouvelle couleur de fond avec une légère éclaircissement au survol */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

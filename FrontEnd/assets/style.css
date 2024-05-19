@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFEF8;
 }
 ol, ul {
 	list-style: none;
@@ -48,11 +49,17 @@ table {
 }
 /** end reset css**/
 body {
-	max-width: 1140px;
+	max-width: 1500px;
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+
+.container__hm {
+	margin: 0 auto;
+	max-width: 1290px;
+}
+
 header {
 	display: flex;
 	justify-content: space-between;
@@ -72,10 +79,12 @@ h1{
 }
 
 h1 > span {
+	text-transform: uppercase;
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
+	padding-top: 6px;
+
 }
 
 h2{
@@ -91,54 +100,201 @@ nav ul {
 
 }
 nav li {
-	padding: 0 10px;
+	padding-left: 40px;
 	font-size: 1.2em;
+}
+
+nav a {
+	text-decoration: none;
+    color: inherit;
+}
+
+header {
+	display: flex;
+	flex-direction: column;
+}
+
+/*elements login logout*/
+header .logout {
+	display: none;
+}
+
+/*element pour fiar disparaitre
+tous les element de edition*/
+
+/*mode edition ajoute avec javascrip 
+style.display"block"*/
+.block__edition {
+	display: none;
+}
+
+
+.block {
+	display: block;
+}
+
+.mode__edition {
+	display: flex;
+	justify-content: center;
+	padding: 20px 30px;
+	background-color: black;
+	color: white;
+	gap: 15px;
+	font-weight: 300;
+}
+
+
+
+
+.mode__edition i {
+	color: white;
+	font-size: 1em;
+}
+/*mode edition*/
+
+
+
+.menu__container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 30px;
+	
 }
 
 li:hover {
 	color: #B1663C;
 }
+
+nav li img {
+	width: 20px;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
+	margin: 140px 0;
+	padding: 0 130px;
 }
 #introduction figure {
-	flex: 1
+	flex: 1;
 }
 #introduction img {
 	display: block;
-	margin: auto;
-	width: 80%;
+	/*margin: auto;*/
+	width: 100%;
 }
 
 #introduction article {
-	flex: 1
+	flex: 1;
+	margin: 0 0px 0 80px;
+	
 }
 #introduction h2 {
 	margin-bottom: 1em;
 }
 
 #introduction p {
-	margin-bottom: 0.5em;
+	margin-bottom: 2em;
 }
 #portfolio h2 {
-	text-align: center;
-	margin-bottom: 1em;
+	/*text-align: center;*/
+	/*margin-bottom: 1.9em;*/
 }
+
+/*code*/
+#portfolio {
+	padding: 0 130px;
+}
+
+.mes__projets {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin-bottom: 50px;
+	gap: 35px;
+}
+
+/*mode edition ajoute avec javascrip 
+style.display"block"*/
+.edition {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 8px;
+	
+}
+.edition i {
+	font-size: 1.2em;
+}
+
+.edition a {
+	text-decoration: none;
+	color: inherit;
+}
+/*fin du mode edition*/
+
+
+.tri__container {
+	display: flex;
+	/*attention comportement bizarre
+	avec une espece de tratition*/
+	/*margin: 50px 0;*/
+	
+}
+
+.tri {
+	margin: 0 auto;
+	display: flex;
+	gap: 13px;
+}
+
+.tri li {
+	border: 1px solid #1D6154;
+	color: #1D6154;
+	font-family: 'Syne';
+	border-radius: 20px;
+	padding: 10px 25px;
+	font-size: 1.2em;
+	font-weight: 600;
+	/*le parametre va marche si les propietes son combines*/
+	transition: color 0.4s, background-color 0.4s;
+	cursor: pointer;
+}
+
+.tri li:hover {
+	background-color: #1D6154;
+	color: white;
+}
+
+
 .gallery {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
+	transition: all 0.5s ease-in-out;
+	margin-top: 50px;
 }
 
 .gallery img {
 	width: 100%;
 
 }
+
+
+/*figure .fade-out {
+	opacity: 0;
+	transition: opacity 0.5 ease-in-out;
+}*/
+
+/*Login*/
+
+
 #contact {
-	width: 50%;
+	width: 35%;
 margin: auto;
 }
 #contact > * {
@@ -181,8 +337,16 @@ input[type="submit"]{
 }
 
 footer nav ul {
+	background-color: white;
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	/*margin: 2em*/
+	padding: 25px 100px 25px 0;
+}
+
+#imageUpload .error__message {
+	color: red;
+	text-align: center;
+	margin: 10px 0;
 }
 
