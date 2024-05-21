@@ -1,19 +1,18 @@
 /////////////////////////////BUTTON DES CATEGORIES///////////////////
 
-/*function pour DEMANDER AU API LES BUTTON DES CATEGORIES Swagger*/
+/*function pour DEMANDER AU API LES BUTTON DES CATEGORIES Swagger method GET*/
 async function getCategorys() {
     try {
         // on recupere les donnes
         const response = await fetch("http://localhost:5678/api/categories")
         // Vérifie si la réponse est correcte
         if (!response.ok) {
-            throw new Error('La requête a échoué')
+            throw new Error(`La requête a échoué: ${response.status}`)
         }
         // Analyse la réponse JSON
-        return await response.json()
-        // Affiche les données récupérées dans la console
-        //let responseJson = response.json()
-        //console.log(responseJson)
+        // Récupérer les données JSON de la réponse
+        const data = await response.json();
+        return data;
     } catch (error) {
         // Gère les erreurs potentielles
         console.error("Une erreur s'est produite lors de la récupération des données :", error)
@@ -22,20 +21,27 @@ async function getCategorys() {
 //getCategorys();
 
 /*function qu'AFFICHE LES BUTTONS de categorie dans le DOM*/
+//Performance: L'utilisation de SET pour vérifier
+// l'existence d'une valeur est généralement plus rapide
+// que d'utiliser un tableau, en particulier lorsque le nombre
+// d'éléments augmente. POUR EVITER DES DOUBLONS DANS L'AFFICHAGE
 const ul = document.getElementById("sort")
 
 async function addCategorysButtons() {
     const categorysBtn = await getCategorys()
-    //console.log(categorysBtn)
+    // Création d'un Set pour stocker les catégories
+    const seenCategories = new Set() 
     categorysBtn.forEach(tri => {
-        const li = document.createElement("li")
-        li.textContent = tri.name
-        //on rajout le id pour pouvoir l'utiliser pour faire le tri des images
-        li.id = tri.id
-        // la class est deja pris en compte
-        // car les parametres sont ecris avec le parent
-        //li.classList.add("tri")
-        ul.appendChild(li)
+        // Vérifie si le nom de la catégorie n'est pas déjà ajouté
+        if (!seenCategories.has(tri.name)) {  
+            const li = document.createElement("li")
+            li.textContent = tri.name
+            // L'ID est utilisé pour filtrer plus tard
+            li.id = tri.id;  
+            ul.appendChild(li);
+            // Ajoute le nom de la catégorie au Set
+            seenCategories.add(tri.name)  
+        }
     })
 }
 addCategorysButtons()
@@ -112,7 +118,11 @@ const gallery = document.querySelector(".gallery")
 
         //on va inserer des autres element du tableau sur
         //swagger pour pouvoir les utilize pour le tri
-        figure.id = work.categoryId
+        //ATTENTION J'AI CHANGE CETTE LIGNE, ORIGINALMENT CETTAI
+        //figure.id = work.categoryId///////
+        //Donc s'il y a de problemes concernant l'affichage  des categoryes et
+        // avec les images il faut le metre commen AVANT
+        figure.id = work.id
         img.src = work.imageUrl
         figcaption.textContent = work.title
 
@@ -151,7 +161,100 @@ window.addEventListener('load', () => {
     }
 })
 
-///////////////////////////////MODALE/////////////////////////////////////////
+///////////////////////////////MODALE 1 GALLERY//////////////////////////////////////////
+
+//function pour CREER LA GALLERIE ET L'AJOUTER dans la gallery popup
+const galleryPopup = document.querySelector(".popup__gallery")
+
+async function addGalleryPopup() {
+    galleryPopup.innerHTML = ""
+    const gallery = await getWorks()
+    //console.log(gallery)
+    gallery.forEach(images => {
+        const figure = document.createElement("figure")
+        const img = document.createElement("img")
+        const trashBtn = document.createElement("button")
+        trashBtn.classList.add("trash")
+        trashBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>'
+        trashBtn.id = images.id
+        img.src = images.imageUrl
+        //ajouter recement
+        img.alt = images.title;
+        figure.id = images.categoryId
+        figure.appendChild(trashBtn)
+        figure.appendChild(img)
+        galleryPopup.appendChild(figure)
+        
+    })
+    deleteGalleryPopup()
+}
+
+//addGalleryPopup()
+
+////////////////////////EFFACER LES IMAGES DE LA MODALE/////////////////////////////////////////////
+
+// Function pour eliminer les images de la gallerie avec le metod DELETE
+//et que soi prise en compte depui l'API
+async function deleteImageFromApi(imageId) {
+    const token = sessionStorage.getItem('token')
+    if (!token) {
+        alert('No token found, please log in.')
+        return
+    }
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${imageId}`, {
+            method: "DELETE",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            console.log("Image supprimée avec succès")
+            // ACTUALIZE LA MODAL
+            //addGalleryPopup()
+            removeImageFromGalleryModal(imageId);
+            //Nouvelle fucntion q'on appele pour efface les images de 
+            //la gallery principal
+            removeImageFromMainGallery(imageId)
+        } else {
+            console.error("Erreur lors de la suppression de l'image")
+        }
+    } catch (error) {
+        console.error('Erreur lors de la connexion au serveur:', error)
+    }
+    
+}
+addGalleryPopup()
+
+//function pour effacer les projets DE LA GALLERIE
+function deleteGalleryPopup() {
+    const deleteGallery = document.querySelectorAll(".trash")
+    deleteGallery.forEach(trash => {
+        trash.addEventListener("click", async () => {
+            const imageId = trash.id
+            await deleteImageFromApi(imageId)
+            trash.parentElement.remove()
+        })
+    })
+}
+//Pour EVITER DES ERREURS SUR LA CONSOLE LORS LA SUPRESION DE L'IMAGE
+//ET QUE SOI PRISE EN  COMPTE CORRECTEMENT LA RECHARGE DINAMIQUE DE LA MODAL 
+function removeImageFromGalleryModal(imageId) {
+    const galleryItem = document.querySelector(`.gallery-item[data-id="${imageId}"]`);
+    if (galleryItem) {
+        galleryItem.remove();
+    }
+}
+//Function pour EFFACER LES IMAGES DE LA GALLERY PRINCPAL DINAMIQUEMENT
+function removeImageFromMainGallery(imageId) {
+    const galleryMainItem = document.querySelector(`.gallery figure[id="${imageId}"]`);
+    if (galleryMainItem) {
+        galleryMainItem.remove();
+    }
+}
+
+///////////////////////////////MODALE 2/////////////////////////////////////////
 
 //code pour FAIRE APARAITRE ET DISPARAITRE LA MODALE popup__container--add 
 const btnAddPhoto = document.querySelector(".btn__ajouter")
@@ -177,6 +280,7 @@ function modalAddPhoto() {
     //Au click on ferme le popup pour ajouter des photos
     closeAddPhoto.addEventListener("click", () => {
         popup.style.display = "none"
+        window.location.reload()
     })
 }
 modalAddPhoto()
@@ -280,106 +384,7 @@ formModalContainerAdd.addEventListener("submit", (e) => {
     });
 });
 
-///////////////////////////////MODALE GALLERY//////////////////////////////////////////
-
-//function pour CREER LA GALLERIE ET L'AJOUTER dans la gallery popup
-const galleryPopup = document.querySelector(".popup__gallery")
-
-async function addGalleryPopup() {
-    galleryPopup.innerHTML = ""
-    const gallery = await getWorks()
-    //console.log(gallery)
-    gallery.forEach(images => {
-        const figure = document.createElement("figure")
-        const img = document.createElement("img")
-        const trashBtn = document.createElement("button")
-        trashBtn.classList.add("trash")
-        trashBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>'
-        trashBtn.id = images.id
-        img.src = images.imageUrl
-        //ajouter recement
-        img.alt = images.title;
-        figure.id = images.categoryId
-        figure.appendChild(trashBtn)
-        figure.appendChild(img)
-        galleryPopup.appendChild(figure)
-        
-    })
-    deleteGalleryPopup()
-}
-
-//setInterval(addGalleryPopup, 5000);
-//est appeler plus bas dans le code
-//addGalleryPopup()
-
-////////////////////////EFFACER LES IMAGES/////////////////////////////////////////////
-//function pour effacer les projets DE LA GALLERIE
-function deleteGalleryPopup() {
-    const deleteGallery = document.querySelectorAll(".trash")
-    deleteGallery.forEach(trash => {
-        trash.addEventListener("click", async () => {
-            const imageId = trash.id
-            await deleteImageFromApi(imageId)
-            trash.parentElement.remove()
-        })
-    })
-}
-
-// Function pour eliminer les images de la gallerie 
-//et que soi prise en compte depui l'API
-async function deleteImageFromApi(imageId) {
-    const token = sessionStorage.getItem('token')
-    if (!token) {
-        alert('No token found, please log in.')
-        return
-    }
-    try {
-        const response = await fetch(`http://localhost:5678/api/works/${imageId}`, {
-            method: "DELETE",
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        if (response.ok) {
-            console.log("Image supprimée avec succès")
-            // ACTUALIZE LA MODAL
-            //addGalleryPopup()
-            removeImageFromGallery(imageId);
-        } else {
-            console.error("Erreur lors de la suppression de l'image")
-        }
-    } catch (error) {
-        console.error('Erreur lors de la connexion au serveur:', error)
-    }
-    
-}
-addGalleryPopup()
-
-//Pour EVITER DES ERREURS SUR LA CONSOLE LORS LA SUPRESION DE L'IMAGE
-//ET QUE SOI PRISE EN  COMPTE CORRECTEMENT LA RECHARGE DINAMIQUE DE LA MODAL 
-function removeImageFromGallery(imageId) {
-    const galleryItem = document.querySelector(`.gallery-item[data-id="${imageId}"]`);
-    if (galleryItem) {
-        galleryItem.remove();
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//VERIFICATION si les imput sont remplies  
+//VERIFICATION si les imput du FORMULAIRE sont remplies  
 function verificationInputAddWorks() {
     const formTitle = document.querySelector(".popup__container--add #title")
     const formImageInput = document.querySelector(".popup__container--add #imageInput");
@@ -410,7 +415,7 @@ function verificationInputAddWorks() {
 }
 verificationInputAddWorks()
 
-//Function pour INTRODUIR LES NOOVELLES IMAGES DANS LA gallerie
+//Function pour INTRODUIR LES NOUVELLES IMAGES DANS LA gallerie
 //SANS RECHARGER LA PAGE
 function addImageGallery(work) {
     const gallery = document.querySelector("#portfolio .gallery");

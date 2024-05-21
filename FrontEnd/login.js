@@ -1,4 +1,5 @@
-//FUNCTION POST 
+////////////////////////FUNCTION POST//////////////////////////////////// 
+
 const form = document.getElementById("form")
 // Fonction pour envoyer une requête POST pour l'authentification de l'utilisateur
 async function getUser(data) {
@@ -13,7 +14,7 @@ async function getUser(data) {
         });
         if (response.ok) {
              const { token } = await response.json(); // Obtener el token de la respuesta
-            //STOCKER LE quand la session es valide
+            //STOCKER LE TOKEN quand la session es valide
             // Il est important cette procedure pour povoir
             //faire des  autres manipulation administrateur
             sessionStorage.setItem('token', token);
@@ -29,6 +30,7 @@ async function getUser(data) {
             
             // Vérifier si l'email est incorrect
             if (response.status === 404 && data.email) {
+                //class creer dans le css pour L'input email er password
                 email.classList.add("error__input");
                 messageError.innerText = "Nom d'utilisateur incorrect.";
                 messageError.style.display = "block";
@@ -36,6 +38,7 @@ async function getUser(data) {
 
             // Vérifier si le mot de passe est incorrect
             if (response.status === 401 && data.password) {
+                //class creer dans le css pour L'input email er password
                 password.classList.add("error__input");
                 messageError.innerText = "Mot de passe incorrect.";
                 messageError.style.display = "block";

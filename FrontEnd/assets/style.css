@@ -124,6 +124,9 @@ tous les element de edition*/
 
 /*mode edition ajoute avec javascrip 
 style.display"block"*/
+.block__edition h3 {
+	cursor: pointer;
+}
 .block__edition {
 	display: none;
 }
