@@ -146,8 +146,8 @@ window.addEventListener('load', () => {
 
         logout.style.display = "block";
         loginUser.style.display = "none";
-         //attention pour ajouter un class a plusieurs elemts
-        //il faut fairla propiete forEach pour que ç soi apliquée
+         //attention pour ajouter un class a plusieurs elemets
+        //il faut fair querySelectorAll a forEach pour que ça soi apliquée
         blockEdition.forEach(function (element) {
             element.classList.add("block")
         })

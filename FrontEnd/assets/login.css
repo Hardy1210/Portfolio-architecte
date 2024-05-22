@@ -8,13 +8,17 @@ header a {
     color: inherit;
 }
 
+.menu__container--login {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 100px;
+}
+
 .login__container {
     display: flex;
     margin: 150px 0 250px 0;
-}
-
-.menu__container {
-    padding: 0 160px;
 }
 
 form {
@@ -31,6 +35,13 @@ h2 {
 
 .input__email{
     margin-bottom: 30px;
+}
+
+.input__email #email {
+    padding-left: 10px;
+}
+.input__password #password {
+    padding-left: 10px;
 }
 
 label, input {
@@ -83,6 +94,7 @@ form a {
     color: inherit;
 }
 
+/*Class qu'on l'ajout avec javascript*/
 .error__message {
     font-family: 'Syne';
     margin: 30px 0 0 0;
@@ -91,8 +103,11 @@ form a {
     display: none;
 }
 
+/*Class qu'on l'ajout avec javascript*/
 .error__input {
+    box-shadow: 2px 2px 5px 2px rgba(255, 0, 0, 0.3);
     border: 2px solid red;
+    
 }
 
 footer nav ul {
@@ -101,5 +116,17 @@ footer nav ul {
 	margin: 2em
 }
 
-
+/*clase pour l'icone de input password*/
+.input__password {
+    position: relative;
+}
+.fa-eye, .fa-eye-slash {
+    cursor: pointer;
+    position: absolute;
+    right: 3px;
+    top: 37px; /* Ajustez selon votre besoin */
+}
+.fa-eye {
+    padding-right: 1px;
+}
 

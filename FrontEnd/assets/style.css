@@ -119,7 +119,8 @@ header .logout {
 	display: none;
 }
 
-/*element pour fiar disparaitre
+/*Mode Edition*/
+/*element pour faire disparaitre
 tous les element de edition*/
 
 /*mode edition ajoute avec javascrip 
@@ -130,7 +131,6 @@ style.display"block"*/
 .block__edition {
 	display: none;
 }
-
 
 .block {
 	display: block;
@@ -146,16 +146,11 @@ style.display"block"*/
 	font-weight: 300;
 }
 
-
-
-
 .mode__edition i {
 	color: white;
 	font-size: 1em;
 }
-/*mode edition*/
-
-
+/*fin mode edition*/
 
 .menu__container {
 	display: flex;
@@ -176,6 +171,7 @@ nav li img {
 
 #introduction {
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
 	margin: 140px 0;
 	padding: 0 130px;
@@ -185,8 +181,9 @@ nav li img {
 }
 #introduction img {
 	display: block;
-	/*margin: auto;*/
+	margin: 0 auto;
 	width: 100%;
+	min-width: 100px;
 }
 
 #introduction article {
@@ -200,10 +197,6 @@ nav li img {
 
 #introduction p {
 	margin-bottom: 2em;
-}
-#portfolio h2 {
-	/*text-align: center;*/
-	/*margin-bottom: 1.9em;*/
 }
 
 /*code*/
@@ -238,18 +231,18 @@ style.display"block"*/
 }
 /*fin du mode edition*/
 
-
 .tri__container {
 	display: flex;
+	justify-content: center;
 	/*attention comportement bizarre
 	avec une espece de tratition*/
 	/*margin: 50px 0;*/
-	
 }
 
 .tri {
-	margin: 0 auto;
+	justify-content: center;
 	display: flex;
+	flex-wrap: wrap;
 	gap: 13px;
 }
 
@@ -271,7 +264,6 @@ style.display"block"*/
 	color: white;
 }
 
-
 .gallery {
 	width: 100%;
 	display: grid;
@@ -287,14 +279,10 @@ style.display"block"*/
 
 }
 
-
 /*figure .fade-out {
 	opacity: 0;
 	transition: opacity 0.5 ease-in-out;
 }*/
-
-/*Login*/
-
 
 #contact {
 	width: 35%;
