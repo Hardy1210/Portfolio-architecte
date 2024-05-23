@@ -15,7 +15,7 @@ openEdition.forEach(element => {
 closeEdition.addEventListener("click", () => {
     popup.style.display = "none"
     //Code pour recharger la page a la fermeture
-    //window.location.reload()
+    window.location.reload()
 })
 
 //Evenement pour faire disparaitre le popup au CLICK DEHORS DE

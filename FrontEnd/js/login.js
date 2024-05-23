@@ -119,7 +119,7 @@ function initialize() {
 // Initialisation du formulaire
 initialize();
 
-//bonus pour observe le mot de passe
+//BONUS pour observer le mot de passe
 const togglePassword = document.getElementById("togglePassword")
 //bonus pour observe le mot de passe
 togglePassword.addEventListener('click', () => {

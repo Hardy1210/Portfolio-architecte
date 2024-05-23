@@ -143,10 +143,12 @@ window.addEventListener('load', () => {
         const blockEdition = document.querySelectorAll(".block__edition")
         const logout = document.querySelector(".logout")
         const loginUser = document.querySelector(".login")
+        //const triContainer = document.querySelector(".tri__container")
 
-        logout.style.display = "block";
-        loginUser.style.display = "none";
-         //attention pour ajouter un class a plusieurs elemets
+        logout.style.display = "block"
+        loginUser.style.display = "none"
+        //triContainer.style.display = "none"
+        //attention pour ajouter un class a plusieurs elemets
         //il faut fair querySelectorAll a forEach pour que ça soi apliquée
         blockEdition.forEach(function (element) {
             element.classList.add("block")
@@ -285,7 +287,7 @@ function modalAddPhoto() {
 }
 modalAddPhoto()
 
-///////////////////////////////MODALE/////////////////////////////////////////
+///////////////////////////////MODALE 2/////////////////////////////////////////
 
 //EVENEMENT POUR PREVISUALISER l'image qu'on charge dans l'input file
 //on va stoque dans des variables les element a utilizer 
@@ -302,13 +304,13 @@ const pFile =document.querySelector(".container__file p")
 
 // On va ecouter l'evenement sur l'input file
 inputFile.addEventListener("change", () => {
-    //on va acceder au premiere fichier d'entrée pur le manipumer
+    //on va acceder au premiere fichier d'entrée pur le manipuler
     const file = inputFile.files[0]
     if(file) {
         const reader = new FileReader()
         reader.onload = function(e) {
             previewImg.src = e.target.result
-            //von disparaitre les qutres elemens 
+            //on disparai les trois elements 
             previewImg.style.display = "block"
             labelFile.style.display = "none"
             iconFile.style.display = "none"
@@ -325,7 +327,7 @@ inputFile.addEventListener("change", () => {
 async function categoryModal() {
     const selectCategory = document.querySelector(".popup__container--add select")
     const categorySelect = await getCategorys()
-    //por chaque categorie on va creer un valeur "id" et an vcaleur "name"
+    //por chaque categorie on va creer un valeur "id" et un valeur "name"
     categorySelect.forEach(category => {
         const option = document.createElement("option")
         //la option  "id" vient de swagger et pareilment "name"
@@ -343,14 +345,18 @@ const formModalContainerAdd = document.querySelector(".popup__container--add for
 const formTitle = document.querySelector(".popup__container--add #title")
 const formCategory = document.querySelector(".popup__container--add #category")
 const formImageInput = document.querySelector(".popup__container--add #imageInput")
+const messageSpan = document.querySelector("#imageUpload .error")
 //pour utilizzer le token 
 const token = sessionStorage.getItem('token')// Obtén el token almacenado en sessionStorage
 
 formModalContainerAdd.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    if (formImageInput.files.length === 0) {
-        console.error('No file selected for upload.')
+    //GESTION DU FORMULAIRE JUSTE POUR LE SUBMIT GENERAL 
+    if (formTitle.value.trim() === "" || formCategory.value.trim() === "" || formImageInput.files.length === 0) {
+        messageSpan.textContent = "Veuillez remplir tous les champs."
+        messageSpan.classList.add("error__message")
+        console.error("Tous le champs sont obligatoires.")
         return;
     }
     const formData = new FormData();
@@ -378,6 +384,7 @@ formModalContainerAdd.addEventListener("submit", (e) => {
         //On appel cette funcion
         addImageGallery(data);
         addGalleryPopup()
+        
     })
     .catch(error => {
         console.error('Erreur:', error)
@@ -387,10 +394,11 @@ formModalContainerAdd.addEventListener("submit", (e) => {
 //VERIFICATION si les imput du FORMULAIRE sont remplies  
 function verificationInputAddWorks() {
     const formTitle = document.querySelector(".popup__container--add #title")
-    const formImageInput = document.querySelector(".popup__container--add #imageInput");
+    const formImageInput = document.querySelector(".popup__container--add #imageInput")
+    const select = document.getElementById("category")
     const btnValidation = document.querySelector(".btn__add--container button")
     const messageSpan = document.querySelector("#imageUpload .error")
-    //pour creer une nouvele element dnas la gallery dinamiquement
+    //pour creer une nouvelle element dnas la gallery dinamiquement
     const gallery = document.querySelector("#portfolio .gallery")
     
     function validateFields() {
@@ -399,7 +407,7 @@ function verificationInputAddWorks() {
         messageSpan.classList.remove("error__message")
 
         // Vérifier si les champs sont vides
-        if (formTitle.value === "" || formImageInput.files.length === 0) {
+        if (formTitle.value === "" || formImageInput.files.length === 0 || select.value === "") {
             messageSpan.textContent = 'Veuillez remplir tous les champs.'
             messageSpan.classList.add("error__message");
             btnValidation.style.backgroundColor = "#A7A7A7"
@@ -412,13 +420,14 @@ function verificationInputAddWorks() {
     // Ajouter l'écouteur d'événements sur les champs de saisie
     formTitle.addEventListener("input", validateFields)
     formImageInput.addEventListener("input", validateFields)
+    select.addEventListener("input", validateFields)
 }
 verificationInputAddWorks()
 
 //Function pour INTRODUIR LES NOUVELLES IMAGES DANS LA gallerie
 //SANS RECHARGER LA PAGE
 function addImageGallery(work) {
-    const gallery = document.querySelector("#portfolio .gallery");
+    const gallery = document.querySelector("#portfolio .gallery")
     const figure = document.createElement("figure");
     figure.innerHTML = `
         <img src="${work.imageUrl}" alt="${work.title}">
