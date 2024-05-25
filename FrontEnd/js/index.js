@@ -3,7 +3,7 @@
 /*function pour DEMANDER AU API LES BUTTON DES CATEGORIES Swagger method GET*/
 async function getCategorys() {
     try {
-        // on recupere les donnes
+        // on recupere les donnes solicitud HTTP
         const response = await fetch("http://localhost:5678/api/categories")
         // Vérifie si la réponse est correcte
         if (!response.ok) {
@@ -32,7 +32,8 @@ async function addCategorysButtons() {
     // Création d'un Set pour stocker les catégories
     const seenCategories = new Set() 
     categorysBtn.forEach(tri => {
-        // Vérifie si le nom de la catégorie n'est pas déjà ajouté
+        // Vérifie si le nom "name" de la catégorie n'est pas déjà ajouté,
+        //cas contraire il procede a l'ajouter
         if (!seenCategories.has(tri.name)) {  
             const li = document.createElement("li")
             li.textContent = tri.name
@@ -53,7 +54,9 @@ async function selectCategory() {
     const category = await getWorks()
     //console.log(category)
     const btnCategory = document.querySelectorAll(".tri li")
+
     for(let i = 0; i < btnCategory.length; i++) {
+        //Evenement
         btnCategory[i].addEventListener("click", (e) => {
             //on va creer une variable pôur estoquer le resulta de levenement(e)
             //pour l'utilizer pour le tri des images
@@ -63,6 +66,8 @@ async function selectCategory() {
             //pour chaque click on elimine les images works
             gallery.innerHTML = ""
             // On va creer la condition pour filtrer
+            //si le  "id" du bouton N'EST pas "0" se filtrent les images(categorys) en
+            //utilisant le metod "filter"
                 if (btnCategoryId !== "0") {
                     const filterCategory = category.filter((works) => {
                     return works.categoryId == btnCategoryId
@@ -72,7 +77,8 @@ async function selectCategory() {
                         addWorks(works)
                     })
                     } else {
-                        //ON APPEL LA FUNCTION  QU'ON A CREER AVANT
+                        //ON APPEL LA FUNCTION QU'ON A CREER AVANT
+                        //si le "id" du bouton est "0" donc toutes les images aparaisent
                         createWorks() 
                     }
         })
@@ -99,10 +105,11 @@ async function getWorks() {
 }
 //getWorks()
 
-//CREATION DES ELEMENT POUR HAQUE IMAGE
+//CREATION DES ELEMENT POUR CHAQUE IMAGE
 async function createWorks() {
     const works = await getWorks()
     works.forEach((work) => {
+        //on appel la function pour integre le forEach
         addWorks(work)
     })
 }
@@ -143,11 +150,11 @@ window.addEventListener('load', () => {
         const blockEdition = document.querySelectorAll(".block__edition")
         const logout = document.querySelector(".logout")
         const loginUser = document.querySelector(".login")
-        //const triContainer = document.querySelector(".tri__container")
+        const triContainer = document.querySelector(".tri__container")
 
         logout.style.display = "block"
         loginUser.style.display = "none"
-        //triContainer.style.display = "none"
+        triContainer.style.display = "none"
         //attention pour ajouter un class a plusieurs elemets
         //il faut fair querySelectorAll a forEach pour que ça soi apliquée
         blockEdition.forEach(function (element) {
@@ -302,11 +309,28 @@ const pFile =document.querySelector(".container__file p")
 //parametres pour faire disparaitre les autres elements a l'interieur
 //de notre function
 
+//PARAMETRES DE VALIDATION DU FORMAT D'IMAGE
+const validationFormatImage = ["image/jpeg", "image/png"]
+//TAILLE EN BYTES(4 MB)
+const maxFileSize = 4 * 1024 * 1024 
+
 // On va ecouter l'evenement sur l'input file
 inputFile.addEventListener("change", () => {
     //on va acceder au premiere fichier d'entrée pur le manipuler
     const file = inputFile.files[0]
-    if(file) {
+    if (file) {
+        if (!validationFormatImage.includes(file.type)) {
+            alert("Format de fichier permit, seuls les fichiers JPG et PNG son admits.")
+            //reinicialise l'input
+            input.value = ""
+            return
+        }
+        if (file.size > maxFileSize) {
+            alert("Le fichier est trop grand. la taille maximal autorisée est de 4 Mo.")
+            //on reinisialise l'input
+            inputFile.value = ""
+            return
+        }
         const reader = new FileReader()
         reader.onload = function(e) {
             previewImg.src = e.target.result
@@ -315,9 +339,9 @@ inputFile.addEventListener("change", () => {
             labelFile.style.display = "none"
             iconFile.style.display = "none"
             pFile.style.display = "none"
-        }
-        //pour l'ejecution du code
-        reader.readAsDataURL(file)
+    }
+    //pour l'ejecution du code
+    reader.readAsDataURL(file)
     }
 })
 
@@ -350,14 +374,14 @@ const messageSpan = document.querySelector("#imageUpload .error")
 const token = sessionStorage.getItem('token')// Obtén el token almacenado en sessionStorage
 
 formModalContainerAdd.addEventListener("submit", (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     //GESTION DU FORMULAIRE JUSTE POUR LE SUBMIT GENERAL 
     if (formTitle.value.trim() === "" || formCategory.value.trim() === "" || formImageInput.files.length === 0) {
         messageSpan.textContent = "Veuillez remplir tous les champs."
         messageSpan.classList.add("error__message")
         console.error("Tous le champs sont obligatoires.")
-        return;
+        return
     }
     const formData = new FormData();
     formData.append('image', formImageInput.files[0])
@@ -382,14 +406,33 @@ formModalContainerAdd.addEventListener("submit", (e) => {
     .then(data => {
         console.log("Image ajoutée:", data)
         //On appel cette funcion
-        addImageGallery(data);
+        addImageGallery(data)
         addGalleryPopup()
-        
+        //ON APPEL LA FUCNTION RESET
+        resetForm()
     })
     .catch(error => {
         console.error('Erreur:', error)
-    });
-});
+    })
+})
+
+//Function pour REINISIALISER LE FORMULAIRE
+function resetForm() {
+    formModalContainerAdd.reset()
+    messageSpan.textContent = ""
+    messageSpan.classList.remove("error__message")
+    formTitle.placeholder = ""
+    formCategory.selectedIndex = 0
+    formImageInput.value = ""
+    //il faut inverser les parametres pour previewImg
+    //pour reinisialize la previsualisation du champ
+    previewImg.src = ""
+    previewImg.style.display = "none";
+    labelFile.style.display = "block";
+    iconFile.style.display = "block";
+    pFile.style.display = "block";
+    
+}
 
 //VERIFICATION si les imput du FORMULAIRE sont remplies  
 function verificationInputAddWorks() {
